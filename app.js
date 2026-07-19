@@ -391,27 +391,39 @@
     ctx.font = "400 28px Arial, sans-serif";
     ctx.fillText("כלי אישי, עצמאי ולא רשמי", 1000, 126);
 
+    const photoResults = await Promise.all(topEight.map((candidate) => loadShareImage(candidate.image)));
+
     topEight.forEach((candidate, index) => {
-      const y = 250 + index * 118;
+      const y = 246 + index * 120;
       ctx.fillStyle = "#ffffff";
-      roundedRect(ctx, 70, y - 68, 940, 88, 8);
+      roundedRect(ctx, 70, y - 76, 940, 100, 8);
       ctx.fill();
 
       ctx.fillStyle = "#0048fe";
       ctx.beginPath();
-      ctx.arc(956, y - 24, 30, 0, Math.PI * 2);
+      ctx.arc(956, y - 26, 30, 0, Math.PI * 2);
       ctx.fill();
 
       ctx.fillStyle = "#ffffff";
       ctx.font = "800 28px Arial, sans-serif";
       ctx.textAlign = "center";
-      ctx.fillText(String(index + 1), 956, y - 14);
+      ctx.fillText(String(index + 1), 956, y - 16);
+
+      const photo = photoResults[index];
+      const photoX = 790;
+      const photoY = y - 66;
+      const photoSize = 80;
+      if (photo) {
+        drawCoverImage(ctx, photo, photoX, photoY, photoSize, photoSize, 8);
+      } else {
+        drawInitialsAvatar(ctx, candidate.name, photoX, photoY, photoSize);
+      }
 
       ctx.textAlign = "right";
       ctx.fillStyle = "#010c19";
       ctx.font = "800 34px Arial, sans-serif";
       const name = `${candidate.title ? `${candidate.title} ` : ""}${candidate.name}`;
-      fillFittedRtlText(ctx, name, 900, y - 13, 780);
+      fillFittedRtlText(ctx, name, 760, y - 16, 650);
     });
 
     ctx.fillStyle = "#59606c";
@@ -455,6 +467,49 @@
     ctx.lineTo(x, y + radius);
     ctx.quadraticCurveTo(x, y, x + radius, y);
     ctx.closePath();
+  }
+
+  function drawCoverImage(ctx, image, x, y, width, height, radius) {
+    const scale = Math.max(width / image.naturalWidth, height / image.naturalHeight);
+    const sourceWidth = width / scale;
+    const sourceHeight = height / scale;
+    const sourceX = (image.naturalWidth - sourceWidth) / 2;
+    const sourceY = (image.naturalHeight - sourceHeight) / 2;
+
+    ctx.save();
+    roundedRect(ctx, x, y, width, height, radius);
+    ctx.clip();
+    ctx.drawImage(image, sourceX, sourceY, sourceWidth, sourceHeight, x, y, width, height);
+    ctx.restore();
+  }
+
+  function drawInitialsAvatar(ctx, name, x, y, size) {
+    ctx.fillStyle = "#e8edf5";
+    roundedRect(ctx, x, y, size, size, 8);
+    ctx.fill();
+    ctx.fillStyle = "#0048fe";
+    ctx.font = "800 28px Arial, sans-serif";
+    ctx.textAlign = "center";
+    ctx.fillText(initials(name), x + size / 2, y + size / 2 + 10);
+  }
+
+  function initials(name) {
+    return name
+      .split(/\s+/)
+      .filter(Boolean)
+      .slice(0, 2)
+      .map((part) => part[0])
+      .join("");
+  }
+
+  function loadShareImage(url) {
+    return new Promise((resolve) => {
+      const image = new Image();
+      image.crossOrigin = "anonymous";
+      image.onload = () => resolve(image);
+      image.onerror = () => resolve(null);
+      image.src = imageFallbackUrl(url);
+    });
   }
 
   function fillFittedRtlText(ctx, text, x, y, maxWidth) {
