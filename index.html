@@ -1,0 +1,150 @@
+<!doctype html>
+<html lang="he" dir="rtl">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>הדירוג האישי בפריימריז</title>
+    <meta
+      name="description"
+      content="כלי אישי לדירוג מועמדי ומועמדות הפריימריז של הדמוקרטים באמצעות השוואות זוגיות."
+    >
+    <link rel="icon" href="https://democrats.org.il/wp-content/uploads/2025/06/FAV-icon-1.svg">
+    <link rel="stylesheet" href="styles.css">
+  </head>
+  <body>
+    <div class="app-shell">
+      <header class="site-header">
+        <a class="brand" href="https://democrats.org.il/candidates/" target="_blank" rel="noreferrer">
+          <img
+            src="https://democrats.org.il/wp-content/uploads/2025/03/Democratim-logo.svg"
+            alt="הדמוקרטים"
+          >
+        </a>
+        <div class="header-copy">
+          <p class="eyebrow">כלי עצמאי ולא רשמי</p>
+          <h1>הדירוג האישי בפריימריז</h1>
+          <p>
+            כלי עזר פרטי לדירוג מועמדי ומועמדות הפריימריז. האתר אינו מטעם מפלגת הדמוקרטים, אינו מאושר על ידה, ואינו קשור אליה.
+          </p>
+        </div>
+      </header>
+
+      <main>
+        <section id="intro-view" class="view intro-view" hidden>
+          <div class="intro-panel">
+            <p class="eyebrow">ברוכים הבאים</p>
+            <h2>כמה בחירות קטנות, דירוג אחד ברור</h2>
+            <p class="intro-text">
+              במקום לנסות לסדר את כל הרשימה בבת אחת, האתר יציג בכל פעם שני מועמדים או מועמדות. בוחרים את מי שמעדיפים, והאתר בונה מזה דירוג אישי.
+            </p>
+            <p class="intro-note">
+              הרבה מועמדים ראויים, בחירה אחת לא פשוטה. הכלי הזה עוזר לעשות סדר.
+            </p>
+            <p class="count-line">
+              נטענו <strong id="candidate-count">0</strong> מועמדים ומועמדות מתוך אתר הדמוקרטים.
+            </p>
+            <details class="about-panel">
+              <summary>על האתר ואיך הוא עובד</summary>
+              <p>
+                האתר משתמש במיון מיזוגים: הוא מחלק את הרשימה האקראית לקבוצות קטנות, ממזג אותן בחזרה לפי הבחירות שלך, ובסוף מציג דירוג מלא.
+              </p>
+              <p>
+                כדי לחסוך שאלות, האתר זוכר יחסי העדפה. אם כבר בחרת את א׳ על פני ב׳ ואת ב׳ על פני ג׳, הוא יסיק לבד שא׳ עדיף על ג׳ ולא ישאל שוב.
+              </p>
+              <p>
+                לפני הדירוג בוחרים אילו מועמדים ומועמדות בכלל משתתפים. מי שלא נבחר/ה לא יוצג/ת בשאלות ולא יופיע/תופיע ברשימה הסופית.
+              </p>
+              <p>
+                כל המידע נשמר רק בדפדפן שלך. זהו כלי עצמאי ולא רשמי, והמידע והתמונות נלקחו מ<a href="https://democrats.org.il/candidates/" target="_blank" rel="noreferrer">עמוד המועמדים הרשמי באתר הדמוקרטים</a>.
+              </p>
+            </details>
+            <div class="intro-actions">
+              <button id="start-button" class="button primary" type="button">לבחירת משתתפים</button>
+              <button id="resume-button" class="button ghost" type="button" hidden>המשך דירוג קודם</button>
+            </div>
+          </div>
+        </section>
+
+        <section id="selection-view" class="view selection-view" hidden>
+          <div class="selection-header">
+            <div>
+              <p class="eyebrow">בחירת משתתפים</p>
+              <h2>מי נכנס/ת לדירוג?</h2>
+              <p>סמנו רק את מי שאתם שוקלים. אפשר לבחור הכל, לנקות, ואז להתחיל למיין.</p>
+            </div>
+            <div class="selection-actions">
+              <strong id="selected-count">0</strong>
+              <button id="select-all-button" class="button ghost" type="button">לבחור הכל</button>
+              <button id="clear-selection-button" class="button text" type="button">לנקות</button>
+              <button id="begin-ranking-button" class="button primary" type="button">להתחיל דירוג</button>
+            </div>
+          </div>
+          <div id="selection-grid" class="selection-grid"></div>
+        </section>
+
+        <section id="compare-view" class="view compare-view" hidden>
+          <div class="status-bar">
+            <div>
+              <p class="eyebrow">שאלות שנענו</p>
+              <strong id="comparison-count">0</strong>
+            </div>
+            <div>
+              <p class="eyebrow">הוסקו לבד</p>
+              <strong id="inferred-count">0</strong>
+            </div>
+            <div>
+              <p class="eyebrow">בדירוג</p>
+              <strong id="active-count">0</strong>
+            </div>
+            <div>
+              <p class="eyebrow">נשארו בערך</p>
+              <strong id="remaining-count">0</strong>
+            </div>
+            <button id="undo-button" class="icon-button" type="button" aria-label="בטל בחירה אחרונה" title="בטל בחירה אחרונה">
+              ↶
+            </button>
+          </div>
+
+          <div class="matchup" aria-live="polite">
+            <article id="candidate-a" class="candidate-card"></article>
+            <div class="versus">או</div>
+            <article id="candidate-b" class="candidate-card"></article>
+          </div>
+
+          <div class="secondary-actions">
+            <button id="restart-button" class="button text" type="button">התחלה מחדש עם סדר אקראי</button>
+          </div>
+          <div class="mobile-choice-bar" aria-label="בחירה מהירה">
+            <button id="mobile-choice-a" class="button primary" type="button"></button>
+            <button id="mobile-choice-b" class="button primary" type="button"></button>
+          </div>
+        </section>
+
+        <section id="results-view" class="view results-view" hidden>
+          <div class="results-header">
+            <div>
+              <p class="eyebrow">הרשימה שלך</p>
+              <h2>הדירוג הושלם</h2>
+              <p class="results-note">הרשימה כוללת רק את המשתתפים שנבחרו לפני תחילת הדירוג.</p>
+            </div>
+            <div class="results-actions">
+              <button id="share-image-button" class="button ghost" type="button">שיתוף תמונת שמינייה</button>
+              <button id="results-restart-button" class="button primary" type="button">דירוג חדש</button>
+            </div>
+          </div>
+          <ol id="results-list" class="results-list"></ol>
+        </section>
+      </main>
+
+      <footer class="site-footer">
+        <span>כלי אישי, עצמאי ולא רשמי. אין לאתר קשר למפלגת הדמוקרטים.</span>
+        <a class="source-link" href="https://democrats.org.il/candidates/" target="_blank" rel="noreferrer">
+          מקור הנתונים הרשמי: עמוד המועמדים באתר הדמוקרטים
+        </a>
+      </footer>
+    </div>
+
+    <script src="candidates.js"></script>
+    <script src="app.js"></script>
+  </body>
+</html>
