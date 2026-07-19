@@ -297,7 +297,7 @@
         const isSelected = selectedCandidateIds.has(candidate.id);
         return `
           <button class="selection-card ${isSelected ? "is-selected" : ""}" type="button" data-toggle="${candidate.id}" aria-pressed="${isSelected}">
-            <img src="${imageUrl(candidate.image)}" alt="${escapeHtml(candidate.name)}" loading="lazy" referrerpolicy="no-referrer">
+            <img src="${imageUrl(candidate.image)}" data-fallback-src="${imageFallbackUrl(candidate.image)}" alt="${escapeHtml(candidate.name)}" loading="lazy" referrerpolicy="no-referrer">
             <span>
               <strong>${candidate.title ? `${escapeHtml(candidate.title)} ` : ""}${escapeHtml(candidate.name)}</strong>
               <small>${isSelected ? "משתתף/ת בדירוג" : "לא בדירוג"}</small>
@@ -314,7 +314,7 @@
 
   function candidateCard(candidate) {
     return `
-      <img class="candidate-image" src="${imageUrl(candidate.image)}" alt="${escapeHtml(candidate.name)}" loading="eager" referrerpolicy="no-referrer" data-choice="${candidate.id}">
+      <img class="candidate-image" src="${imageUrl(candidate.image)}" data-fallback-src="${imageFallbackUrl(candidate.image)}" alt="${escapeHtml(candidate.name)}" loading="eager" referrerpolicy="no-referrer" data-choice="${candidate.id}">
       <div class="candidate-body">
         ${candidate.title ? `<p class="candidate-title">${escapeHtml(candidate.title)}</p>` : ""}
         <h2 class="candidate-name">${escapeHtml(candidate.name)}</h2>
@@ -358,7 +358,7 @@
         const candidate = candidateById.get(id);
         return `
           <li class="result-item">
-            <img src="${imageUrl(candidate.image)}" alt="${escapeHtml(candidate.name)}" loading="lazy" referrerpolicy="no-referrer">
+            <img src="${imageUrl(candidate.image)}" data-fallback-src="${imageFallbackUrl(candidate.image)}" alt="${escapeHtml(candidate.name)}" loading="lazy" referrerpolicy="no-referrer">
             <div>
               <h3>${candidate.title ? `${escapeHtml(candidate.title)} ` : ""}${escapeHtml(candidate.name)}</h3>
               <p>${escapeHtml(candidate.bio)}</p>
@@ -508,6 +508,11 @@
     return escapeHtml(encodeURI(value));
   }
 
+  function imageFallbackUrl(value = "") {
+    const urlWithoutProtocol = value.replace(/^https?:\/\//, "");
+    return escapeHtml(`https://images.weserv.nl/?url=${encodeURIComponent(urlWithoutProtocol)}`);
+  }
+
   elements.startButton.addEventListener("click", openSelection);
   elements.resumeButton.addEventListener("click", render);
   elements.selectAllButton.addEventListener("click", () => setAllSelected(true));
@@ -517,6 +522,17 @@
   elements.restartButton.addEventListener("click", restart);
   elements.resultsRestartButton.addEventListener("click", restart);
   elements.shareImageButton.addEventListener("click", shareTopEightImage);
+
+  document.addEventListener(
+    "error",
+    (event) => {
+      const image = event.target;
+      if (!(image instanceof HTMLImageElement) || !image.dataset.fallbackSrc) return;
+      if (image.src === image.dataset.fallbackSrc) return;
+      image.src = image.dataset.fallbackSrc;
+    },
+    true,
+  );
 
   document.addEventListener("keydown", (event) => {
     if (elements.compareView.hidden) return;
