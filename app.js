@@ -297,7 +297,7 @@
         const isSelected = selectedCandidateIds.has(candidate.id);
         return `
           <button class="selection-card ${isSelected ? "is-selected" : ""}" type="button" data-toggle="${candidate.id}" aria-pressed="${isSelected}">
-            <img src="${candidate.image}" alt="${escapeHtml(candidate.name)}" loading="lazy">
+            <img src="${imageUrl(candidate.image)}" alt="${escapeHtml(candidate.name)}" loading="lazy" referrerpolicy="no-referrer">
             <span>
               <strong>${candidate.title ? `${escapeHtml(candidate.title)} ` : ""}${escapeHtml(candidate.name)}</strong>
               <small>${isSelected ? "משתתף/ת בדירוג" : "לא בדירוג"}</small>
@@ -314,7 +314,7 @@
 
   function candidateCard(candidate) {
     return `
-      <img class="candidate-image" src="${candidate.image}" alt="${escapeHtml(candidate.name)}" loading="eager" data-choice="${candidate.id}">
+      <img class="candidate-image" src="${imageUrl(candidate.image)}" alt="${escapeHtml(candidate.name)}" loading="eager" referrerpolicy="no-referrer" data-choice="${candidate.id}">
       <div class="candidate-body">
         ${candidate.title ? `<p class="candidate-title">${escapeHtml(candidate.title)}</p>` : ""}
         <h2 class="candidate-name">${escapeHtml(candidate.name)}</h2>
@@ -358,7 +358,7 @@
         const candidate = candidateById.get(id);
         return `
           <li class="result-item">
-            <img src="${candidate.image}" alt="${escapeHtml(candidate.name)}" loading="lazy">
+            <img src="${imageUrl(candidate.image)}" alt="${escapeHtml(candidate.name)}" loading="lazy" referrerpolicy="no-referrer">
             <div>
               <h3>${candidate.title ? `${escapeHtml(candidate.title)} ` : ""}${escapeHtml(candidate.name)}</h3>
               <p>${escapeHtml(candidate.bio)}</p>
@@ -502,6 +502,10 @@
       .replace(/>/g, "&gt;")
       .replace(/"/g, "&quot;")
       .replace(/'/g, "&#039;");
+  }
+
+  function imageUrl(value = "") {
+    return escapeHtml(encodeURI(value));
   }
 
   elements.startButton.addEventListener("click", openSelection);
